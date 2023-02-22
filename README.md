@@ -46,8 +46,50 @@ To create the Cloud Functions that will serve as endpoints for your BigQuery tab
 Once your Cloud Functions are deployed, you can interact with your BigQuery table using the following endpoints:
 Use this sintaxis for the endpoints: https://[CLOUD_FUNCTION_REGION]-[PROJECT_ID].cloudfunctions.net/[FUNCTION_NAME]
 
-- `/rest_api_data_2_query1`: Creates a new record in the table. Send a JSON object with the data you want to insert in the request body.
-- 
-- `/rest_api_data_2_query1`: Retrieves all records from the table.
+- `/rest_api_data_2_query1`: Retrieve the number of employees hired for each job and department in 2021 divided by quarter.
+- `/rest_api_data_2_query2`: Retrieves the number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, grouped by department_id and department
+-	`/rest_api_data`: Insert data passed through a JSON object you send in the request body. It can insert more than 1 row and insert rows to different tables
 
+## Accessing the Endpoints
 
+For this example, as a GET response, we have rest_api_data_2_query1 and the rest_api_data_2_query2 endpoints. So let's enter to those endpoints:
+
+1. https://us-central1-josito-api-data-gcp.cloudfunctions.net/rest_api_data_2_query1
+2. https://us-central1-josito-api-data-gcp.cloudfunctions.net/rest_api_data_2_query2
+
+For POST request to insert data, we have rest_api_data function, so let's enter this command using curl to test it:
+
+curl -m 510 -X POST https://us-central1-josito-api-data-gcp.cloudfunctions.net/rest_api_data -H "Authorization: bearer $(gcloud auth print-identity-token)" -H "Content-Type: application/json" -d '{
+  "table": {
+    "hired_employees_test": {
+      "data": [
+        {
+			"id": 12300,
+			"name": "Jose Taboada",
+			"datetime": "2021-08-03T10:11:53Z",
+			"department_id": 12,
+			"job_id": 10
+        },
+        {
+			"id": 12320,
+			"name": "Alondra Urbe",
+			"datetime": "2021-08-03T10:11:53Z",
+			"department_id": 12,
+			"job_id": 12
+        }
+      ]
+    },
+    "departments": {
+      "data": [
+        {
+          "id": 50,
+          "department": "Technology Consultancy"
+        },
+        {
+          "id": 100,
+          "department": "Data Engineering"
+        }
+      ]
+    }
+  }
+}'
