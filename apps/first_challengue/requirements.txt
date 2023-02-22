@@ -1,0 +1,4 @@
+# Function dependencies, for example:
+google-cloud-bigquery
+google-cloud-bigquery-storage
+flask
